@@ -14,6 +14,10 @@ Rendering:
 - volume/velocity support
 - export with tails (instead of cutting off)
 
+UI:
+
+- show pattern length
+
 ----------------
 For future versions:
 
@@ -24,5 +28,9 @@ Rendering:
 - adjustable loop count
 
 UI:
+
+- show a graphical view of the pattern
+
+Audio:
 
 - preview pattern through audio interface
