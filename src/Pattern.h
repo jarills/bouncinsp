@@ -10,7 +10,9 @@ class Pattern
 {
 public:
 
-    Pattern();
+    Pattern( unsigned idx );
+
+    std::string pattern_name() const;
 
     void reset();
 
@@ -27,4 +29,5 @@ private:
     unsigned char pattern_length_;
     std::vector< PatternEvent > events_;
     float running_quarter_;
+    unsigned idx_;
 };

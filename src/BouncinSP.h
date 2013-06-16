@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace BouncinSP
 {
     namespace SP404SX
@@ -25,6 +27,9 @@ namespace BouncinSP
             };
 
         };
+
     };
+
+    std::string idx_to_pad_name( unsigned idx );
 };
 

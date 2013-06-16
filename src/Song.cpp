@@ -54,6 +54,36 @@ Song::Song( const boost::filesystem::path & base_folder )
     }
 }
 
+std::shared_ptr< Pattern > Song::load_pattern(const boost::filesystem::path & ptn_file, unsigned idx )
+{
+    using namespace boost::filesystem;
+
+    if ( !exists(ptn_file) )
+    {
+        cout << "couldnt find " << ptn_file << endl;
+        return std::shared_ptr< Pattern >();
+    }
+
+    ifstream pattern_io( ptn_file.c_str(), std::ios::binary );
+
+    if ( !pattern_io )
+    {
+        cout << "couldn't read " << ptn_file << endl;
+        return std::shared_ptr< Pattern >();
+    }
+
+    std::shared_ptr< Pattern > pattern = std::make_shared< Pattern >(idx);
+    bool pattern_ok = pattern->read_pattern(pattern_io);
+
+    if ( !pattern_ok )
+    {
+        cout << "couldn't parse " << ptn_file << endl;
+        return std::shared_ptr< Pattern >();
+    }
+
+    return pattern;
+}
+
 bool Song::export_pattern( unsigned ptn_idx )
 {
     if ( bpm_ == 0.0f )
@@ -62,37 +92,19 @@ bool Song::export_pattern( unsigned ptn_idx )
         return false;
     }
 
-    using namespace boost::filesystem;
-
-    using boost::format;
-    using boost::io::group;
-
-    path ptn_file = pattern_path_ / (boost::format("PTN%1%.BIN") % group(setfill('0'), setw(5), ptn_idx)).str();
-
-    if ( !exists(ptn_file) )
+    if ( ptn_idx > patterns_.size() )
     {
-        cout << "couldnt find " << ptn_file << endl;
         return false;
     }
 
-    ifstream pattern_io( ptn_file.c_str(), std::ios::binary );
+    auto pattern = patterns_[ptn_idx];
 
-    if ( !pattern_io )
+    if ( !pattern )
     {
-        cout << "couldn't read " << ptn_file << endl;
         return false;
     }
 
-    Pattern pattern;
-    bool pattern_ok = pattern.read_pattern(pattern_io);
-
-    if ( !pattern_ok )
-    {
-        cout << "couldn't parse " << ptn_file << endl;
-        return false;
-    }
-
-    std::set< unsigned > pads_playing = pattern.pads_playing();
+    std::set< unsigned > pads_playing = pattern->pads_playing();
 
     if ( pads_playing.size() == 0 )
     {
@@ -102,7 +114,7 @@ bool Song::export_pattern( unsigned ptn_idx )
 
     for ( const auto & p : pads_playing )
     {
-        if ( !export_pad_in_pattern(pattern, p) )
+        if ( !export_pad_in_pattern(*pattern, p) )
         {
             cout << "Error exporting pad # " << p << endl;
             return false;
@@ -166,6 +178,45 @@ bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx )
     output.save_to_wav("track_"+pad.sample_name()+".wav");
 
     return true;
+}
+
+bool Song::load_patterns()
+{
+    using namespace boost::filesystem;
+
+    const unsigned int max_patterns = 120;
+
+    for ( unsigned int i = 0; i < max_patterns; ++i )
+    {
+        path ptn_file = pattern_path_ / pattern_name(i);
+
+        if ( !exists(ptn_file) )
+        {
+            continue;
+        }
+
+        auto ptn = load_pattern(ptn_file, i);
+
+        if ( ptn )
+        {
+            patterns_.push_back(ptn);
+        }
+    }
+
+    return true;
+}
+
+std::string Song::pattern_name(unsigned idx) const
+{
+    using boost::format;
+    using boost::io::group;
+
+    return (boost::format("PTN%1%.BIN") % group(setfill('0'), setw(5), idx+1)).str();
+}
+
+const vector<std::shared_ptr<Pattern> > &Song::patterns() const
+{
+    return patterns_;
 }
 
 bool Song::read_stp_info(const boost::filesystem::path &stp_path)

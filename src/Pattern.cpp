@@ -2,11 +2,17 @@
 
 #include "BouncinSP.h"
 
-Pattern::Pattern()
+Pattern::Pattern( unsigned idx )
     :
       pattern_length_(0),
-      running_quarter_(0.0f)
+      running_quarter_(0.0f),
+      idx_(idx)
 {
+}
+
+std::string Pattern::pattern_name() const
+{
+    return "Pattern " + BouncinSP::idx_to_pad_name(idx_);
 }
 
 void Pattern::reset()
