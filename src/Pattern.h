@@ -13,8 +13,11 @@ public:
     Pattern( unsigned idx );
 
     std::string pattern_name() const;
+    void set_pattern_name( const std::string & str );
 
     void reset();
+
+    unsigned index() const;
 
     bool read_pattern( std::istream & in );
 
@@ -30,4 +33,6 @@ private:
     std::vector< PatternEvent > events_;
     float running_quarter_;
     unsigned idx_;
+
+    std::string pattern_name_;
 };

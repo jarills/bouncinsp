@@ -2,11 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QModelIndex>
+#include <QItemSelection>
 
 #include <memory>
 
 class Song;
+class Pattern;
 
 namespace Ui
 {
@@ -30,14 +31,26 @@ private slots:
 
     void on_actionOpen_triggered();
 
-    void on_update_song();
+    void on_pattern_name_changed(const QString & str);
 
-    void on_pattern_select(QModelIndex idx);
+    void on_pattern_select(const QItemSelection & selection);
+
+    void on_browseFolderButton_clicked();
+
+    void on_destinationEdit_textChanged(const QString &arg1);
+
+    void on_exportButton_clicked();
+
+private:
+
+    void on_update_song();
+    void update_pattern_names();
 
 private:
     Ui::MainWindow *ui;
 
     std::shared_ptr< Song > song_;
+    std::shared_ptr< Pattern > active_pattern_;
 };
 
 #endif // MAINWINDOW_H

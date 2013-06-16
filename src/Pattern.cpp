@@ -6,19 +6,30 @@ Pattern::Pattern( unsigned idx )
     :
       pattern_length_(0),
       running_quarter_(0.0f),
-      idx_(idx)
+      idx_(idx),
+      pattern_name_("Pattern " + BouncinSP::idx_to_pad_name(idx_))
 {
 }
 
 std::string Pattern::pattern_name() const
 {
-    return "Pattern " + BouncinSP::idx_to_pad_name(idx_);
+    return pattern_name_;
+}
+
+void Pattern::set_pattern_name(const std::string &str)
+{
+    pattern_name_ = str;
 }
 
 void Pattern::reset()
 {
     running_quarter_ = 0.0f;
     events_.clear();
+}
+
+unsigned Pattern::index() const
+{
+    return idx_;
 }
 
 bool Pattern::read_pattern( std::istream & in )

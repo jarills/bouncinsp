@@ -17,17 +17,18 @@ using namespace std;
 
 Song::Song( const boost::filesystem::path & base_folder )
     :
+      base_folder_(base_folder),
       bpm_(0.0f)
 {
     using namespace boost::filesystem;
 
-    if ( !exists(base_folder) || !is_directory(base_folder))
+    if ( !exists(base_folder_) || !is_directory(base_folder_))
     {
         return;
     }
 
-    sample_path_ = base_folder / "SMPL";
-    pattern_path_ = base_folder / "PTN";
+    sample_path_ = base_folder_ / "SMPL";
+    pattern_path_ = base_folder_ / "PTN";
 
     path pad_info_file = sample_path_ / "PAD_INFO.BIN";
     path stp_info_file = sample_path_ / "STPINFO.BIN";
@@ -84,7 +85,7 @@ std::shared_ptr< Pattern > Song::load_pattern(const boost::filesystem::path & pt
     return pattern;
 }
 
-bool Song::export_pattern( unsigned ptn_idx )
+bool Song::export_pattern(const Pattern &ptn , const ExportOptions &export_options)
 {
     if ( bpm_ == 0.0f )
     {
@@ -92,19 +93,9 @@ bool Song::export_pattern( unsigned ptn_idx )
         return false;
     }
 
-    if ( ptn_idx > patterns_.size() )
-    {
-        return false;
-    }
+    cout << "Exporting pattern '" << ptn.pattern_name() << "'" << endl;
 
-    auto pattern = patterns_[ptn_idx];
-
-    if ( !pattern )
-    {
-        return false;
-    }
-
-    std::set< unsigned > pads_playing = pattern->pads_playing();
+    std::set< unsigned > pads_playing = ptn.pads_playing();
 
     if ( pads_playing.size() == 0 )
     {
@@ -114,7 +105,7 @@ bool Song::export_pattern( unsigned ptn_idx )
 
     for ( const auto & p : pads_playing )
     {
-        if ( !export_pad_in_pattern(*pattern, p) )
+        if ( !export_pad_in_pattern(ptn, p, export_options) )
         {
             cout << "Error exporting pad # " << p << endl;
             return false;
@@ -124,7 +115,7 @@ bool Song::export_pattern( unsigned ptn_idx )
     return true;
 }
 
-bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx )
+bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx, const ExportOptions &export_options )
 {
     if ( bpm_ == 0.0f ) return false;
 
@@ -174,8 +165,14 @@ bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx )
         output.append_frame(out);
     }
 
-    output.normalize();
-    output.save_to_wav("track_"+pad.sample_name()+".wav");
+    if ( export_options.normalize_ )
+    {
+        output.normalize();
+    }
+
+    std::string filename = "track_" + ptn.pattern_name() + "_" + BouncinSP::idx_to_pad_name(pad.pad_info().idx()) + ".wav";
+    path out_path = export_options.path_ / filename;
+    output.save_to_wav(out_path.c_str());
 
     return true;
 }
@@ -217,6 +214,16 @@ std::string Song::pattern_name(unsigned idx) const
 const vector<std::shared_ptr<Pattern> > &Song::patterns() const
 {
     return patterns_;
+}
+
+float Song::bpm() const
+{
+    return bpm_;
+}
+
+const boost::filesystem::path &Song::base_folder() const
+{
+    return base_folder_;
 }
 
 bool Song::read_stp_info(const boost::filesystem::path &stp_path)
