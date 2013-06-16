@@ -3,6 +3,7 @@
 
 #include <QFileDialog>
 #include <QStandardItemModel>
+#include <QProgressDialog>
 
 #include "Song.h"
 #include "Pattern.h"
@@ -60,6 +61,11 @@ void MainWindow::on_actionOpen_triggered()
                                                  QFileDialog::ShowDirsOnly
                                                  | QFileDialog::DontResolveSymlinks);
 
+    if ( dir.isEmpty() )
+    {
+        return;
+    }
+
     song_ = std::make_shared< Song >( dir.toAscii().data() );
     song_->load_patterns();
 
@@ -109,12 +115,21 @@ void MainWindow::on_update_song()
 
     model->removeRows(0, model->rowCount());
 
+    ui->songInfoLabel->setText("Empty.");
+
     if ( !song_ ) return;
+
     auto patterns = song_->patterns();
 
     model->setRowCount(patterns.size());
 
     update_pattern_names();
+
+    QString songDesc = QString(song_->base_folder().c_str())
+            + QString(" (")
+            + QString::number(song_->patterns().size())
+            + " patterns @ " + QString::number(song_->bpm() )+ " bpm)";
+    ui->songInfoLabel->setText(songDesc);
 }
 
 void MainWindow::on_pattern_select(const QItemSelection &selection)
@@ -193,5 +208,12 @@ void MainWindow::on_exportButton_clicked()
     export_options.normalize_ = ui->normalizeCheckbox->isChecked();
     export_options.path_ = ui->destinationEdit->text().toAscii().data();
 
+    QProgressDialog progress("Exporting", "Cancel", 0, 100, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.show();
+    progress.setValue(10);
+
     song_->export_pattern(*active_pattern_, export_options);
+
+    progress.setValue(100);
 }
