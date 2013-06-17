@@ -39,7 +39,7 @@ Song::Song( const boost::filesystem::path & base_folder )
         return;
     }
 
-    ifstream pad_info_io( pad_info_file.c_str(), std::ios::binary );
+    ifstream pad_info_io( pad_info_file.string().c_str(), std::ios::binary );
 
     if ( !pad_info_io )
     {
@@ -65,7 +65,7 @@ std::shared_ptr< Pattern > Song::load_pattern(const boost::filesystem::path & pt
         return std::shared_ptr< Pattern >();
     }
 
-    ifstream pattern_io( ptn_file.c_str(), std::ios::binary );
+    ifstream pattern_io( ptn_file.string().c_str(), std::ios::binary );
 
     if ( !pattern_io )
     {
@@ -172,7 +172,7 @@ bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx, const Ex
 
     std::string filename = "track_" + ptn.pattern_name() + "_" + BouncinSP::idx_to_pad_name(pad.pad_info().idx()) + ".wav";
     path out_path = export_options.path_ / filename;
-    output.save_to_wav(out_path.c_str());
+    output.save_to_wav(out_path.string().c_str());
 
     return true;
 }
@@ -228,7 +228,7 @@ const boost::filesystem::path &Song::base_folder() const
 
 bool Song::read_stp_info(const boost::filesystem::path &stp_path)
 {
-    ifstream in( stp_path.c_str(), std::ios::binary );
+    ifstream in( stp_path.string().c_str(), std::ios::binary );
 
     if ( !in ) return false;
 

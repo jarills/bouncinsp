@@ -12,7 +12,10 @@ using namespace std;
 Pad::Pad( const PadInfo & pad_info )
     :
       pad_info_(pad_info),
-      song_bpm_(0.0f)
+      song_bpm_(0.0f),
+      playing_(false),
+      samples_remaining_(0),
+      play_pos_(0)
 {
 }
 
@@ -28,7 +31,7 @@ bool Pad::load_sample(const boost::filesystem::path samples_path)
         return false;
     }
 
-    sample_.reset( new SimpleAudioWave( sample_file.c_str() ));
+    sample_.reset( new SimpleAudioWave( sample_file.string() ));
     cout << "loaded sample with " << sample_->max_size() << " frames" << endl;
 
     return true;
@@ -66,7 +69,7 @@ std::vector< float > Pad::render_sample()
         }
     }
 
-    if ( play_pos_ > (int)pad_info_.user_sample_end() )
+    if ( play_pos_ >= (int)pad_info_.user_sample_end() )
     {
         if ( pad_info_.is_loop() )
         {
@@ -137,13 +140,13 @@ void Pad::process_queue()
         {
             const PatternEvent & evt = i.second;
 
-            if ( !pad_info_.is_loop() )
+            if ( !pad_info_.is_loop() || !playing_ )
             {
                 // reset play cursor
-                play_pos_ = pad_info_.is_reverse() ? pad_info_.user_sample_end() : pad_info_.user_sample_start();
+                play_pos_ = pad_info_.is_reverse() ? (pad_info_.user_sample_end()-1) : pad_info_.user_sample_start();
             }
 
-            samples_remaining_ = evt.quarters_held() * seconds_per_quarter * sample_->sample_rate();
+            samples_remaining_ = unsigned((float)evt.quarters_held() * seconds_per_quarter * (float)sample_->sample_rate());
             playing_ = true;
         }
 

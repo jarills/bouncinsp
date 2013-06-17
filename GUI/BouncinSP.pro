@@ -42,10 +42,20 @@ DEPENDPATH += ../src
 macx: QMAKE_CFLAGS_RELEASE += -fvisibility=hidden
 macx: QMAKE_CXXFLAGS_RELEASE += -fvisibility=hidden -fvisibility-inlines-hidden
 
+INCLUDEPATH += ../../boost_1_53_0/
+DEPENDPATH += ../../boost_1_53_0/
+
+win32: LIBS += -L"C:/Users/jarek/Coding/boost_1_53_0/stage/lib/" libboost_system-mgw47-mt-1_53 libboost_filesystem-mgw47-mt-1_53
+win32: LIBS += -L"C:/Program Files (x86)/Mega-Nerd/libsndfile/lib/" -llibsndfile-1
+
 win32: LIBS += -lole32 -luser32
 
 unix: LIBS += -lsndfile -lboost_system -lboost_filesystem
-unix:!macx: QMAKE_CXXFLAGS += -std=c++0x
+unix:!macx: QMAKE_CXXFLAGS += -std=c++11
+win32:      QMAKE_CXXFLAGS += -std=c++11
+
+win32: INCLUDEPATH += "C:/Program Files (x86)/Mega-Nerd/libsndfile/include"
+win32: DEPENDPATH += "C:/Program Files (x86)/Mega-Nerd/libsndfile/include"
 
 OTHER_FILES += \
     ../README.md

@@ -66,7 +66,7 @@ void MainWindow::on_actionOpen_triggered()
         return;
     }
 
-    song_ = std::make_shared< Song >( dir.toAscii().data() );
+    song_ = std::make_shared< Song >( dir.toStdString() );
     song_->load_patterns();
 
     if ( song_ )
@@ -81,7 +81,7 @@ void MainWindow::on_pattern_name_changed(const QString &str)
 {
     if ( !active_pattern_ ) return;
 
-    active_pattern_->set_pattern_name(str.toAscii().data());
+    active_pattern_->set_pattern_name(str.toStdString());
 
     update_pattern_names();
 }
@@ -125,7 +125,7 @@ void MainWindow::on_update_song()
 
     update_pattern_names();
 
-    QString songDesc = QString(song_->base_folder().c_str())
+    QString songDesc = QString((char*)song_->base_folder().c_str())
             + QString(" (")
             + QString::number(song_->patterns().size())
             + " patterns @ " + QString::number(song_->bpm() )+ " bpm)";
@@ -190,7 +190,7 @@ void MainWindow::on_destinationEdit_textChanged(const QString &arg1)
 {
     using namespace boost::filesystem;
 
-    const std::string path = arg1.toAscii().data();
+    const std::string path = arg1.toStdString();
     bool ok = exists(path) && is_directory(path);
 
     QString style = ok ? "color:green;" : "color:red;";
@@ -206,7 +206,7 @@ void MainWindow::on_exportButton_clicked()
 
     Song::ExportOptions export_options;
     export_options.normalize_ = ui->normalizeCheckbox->isChecked();
-    export_options.path_ = ui->destinationEdit->text().toAscii().data();
+    export_options.path_ = ui->destinationEdit->text().toStdString();
 
     QProgressDialog progress("Exporting", "Cancel", 0, 100, this);
     progress.setWindowModality(Qt::WindowModal);
