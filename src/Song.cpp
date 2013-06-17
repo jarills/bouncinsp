@@ -103,6 +103,8 @@ bool Song::export_pattern(const Pattern &ptn , const ExportOptions &export_optio
         return true;
     }
 
+    unsigned done_count = 0;
+    sig_track_exported_(0);
     for ( const auto & p : pads_playing )
     {
         if ( !export_pad_in_pattern(ptn, p, export_options) )
@@ -110,6 +112,8 @@ bool Song::export_pattern(const Pattern &ptn , const ExportOptions &export_optio
             cout << "Error exporting pad # " << p << endl;
             return false;
         }
+
+        sig_track_exported_(++done_count);
     }
 
     return true;
@@ -139,7 +143,8 @@ bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx, const Ex
 
     pad.set_song_bpm(bpm_);
 
-    unsigned samples_to_export = (float)(4.0f * ptn.pattern_length() * seconds_per_quarter * BouncinSP::SP404SX::SampleRate);
+    unsigned pattern_length_in_samples = (float)(4.0f * ptn.pattern_length() * seconds_per_quarter * BouncinSP::SP404SX::SampleRate);
+    unsigned samples_to_export = pattern_length_in_samples * export_options.loop_count_;
 
     for ( const auto & e : evts )
     {
@@ -150,7 +155,11 @@ bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx, const Ex
 
         unsigned samples_to_start = (float)(e.quarters_absolute_position() * seconds_per_quarter * BouncinSP::SP404SX::SampleRate);
 
-        pad.queue(samples_to_start,e);
+        // queue as many times as we need loops
+        for ( unsigned int i = 0; i < export_options.loop_count_; ++i )
+        {
+            pad.queue(samples_to_start + i*pattern_length_in_samples,e);
+        }
     }
 
     while ( samples_to_export-- )
@@ -170,7 +179,9 @@ bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx, const Ex
         output.normalize();
     }
 
-    std::string filename = "track_" + ptn.pattern_name() + "_" + BouncinSP::idx_to_pad_name(pad.pad_info().idx()) + ".wav";
+    std::string bar_count = (boost::format("_%1%bars") % (ptn.pattern_length() * export_options.loop_count_)).str();
+
+    std::string filename = "track_" + ptn.pattern_name() + "_" + BouncinSP::idx_to_pad_name(pad.pad_info().idx()) + bar_count + ".wav";
     path out_path = export_options.path_ / filename;
     output.save_to_wav(out_path.string().c_str());
 

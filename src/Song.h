@@ -3,6 +3,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
 
+#include <boost/signals2.hpp>
+
 #include "PadInfo.h"
 
 class Pattern;
@@ -13,9 +15,11 @@ public:
 
     struct ExportOptions
     {
-        ExportOptions() : normalize_(true) {}
+        ExportOptions() : normalize_(true), loop_count_(1), export_tails_(true) {}
         bool normalize_;
         boost::filesystem::path path_;
+        unsigned loop_count_;
+        bool export_tails_;
     };
 
 public:
@@ -36,6 +40,8 @@ public:
     float bpm() const;
 
     const boost::filesystem::path & base_folder() const;
+
+    boost::signals2::signal< void( unsigned ) > sig_track_exported_;
 
 private:
 

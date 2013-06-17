@@ -250,13 +250,15 @@ void MainWindow::on_exportButton_clicked()
     Song::ExportOptions export_options;
     export_options.normalize_ = ui->normalizeCheckbox->isChecked();
     export_options.path_ = ui->destinationEdit->text().toStdString();
+    export_options.export_tails_ = ui->exportTailsCheckbox->isChecked();
+    export_options.loop_count_ = ui->loopCountSpinBox->value();
 
-    QProgressDialog progress("Exporting", "Cancel", 0, 100, this);
+    QProgressDialog progress("Exporting", "Cancel", 0, active_pattern_->pads_playing().size(), this);
     progress.setWindowModality(Qt::WindowModal);
+    boost::signals2::connection connection = song_->sig_track_exported_.connect(
+                [&](unsigned val) { progress.setValue(val); QApplication::processEvents(); } );
     progress.show();
-    progress.setValue(10);
 
     song_->export_pattern(*active_pattern_, export_options);
-
-    progress.setValue(100);
+    connection.disconnect();
 }
