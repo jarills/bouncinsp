@@ -9,6 +9,7 @@ namespace BouncinSP
         const static float PPQ = 96.0f;
         const static float SampleRate = 44100.0f;
         const static unsigned PadA1MidiOffset = 47;
+        const static unsigned ExternalPadNoteNumber = 46;
 
         struct Banks
         {

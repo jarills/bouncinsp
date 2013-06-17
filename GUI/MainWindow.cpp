@@ -43,6 +43,7 @@ void MainWindow::on_actionClose_triggered()
 {
     song_.reset();
     on_update_song();
+    ui->statusBar->showMessage( "Closed project." );
 }
 
 void MainWindow::on_actionReload_triggered()
@@ -123,7 +124,7 @@ void MainWindow::buildPatternView()
 
     QGraphicsScene *scene = new QGraphicsScene();
     auto pads_playing = active_pattern_->pads_playing();
-    scene->setSceneRect(0.0, 0.0, (active_pattern_->pattern_length()*4.0)*100, (pads_playing.size()+1)*100);
+    scene->setSceneRect(0.0, 0.0, (active_pattern_->pattern_length()*4.0)*100, (pads_playing.size())*100);
 
 
     for ( auto event : active_pattern_->events() )
@@ -133,7 +134,7 @@ void MainWindow::buildPatternView()
         int idx = 0;
         for ( auto pad : pads_playing )
         {
-            if ( (event.note_number() - BouncinSP::SP404SX::PadA1MidiOffset) == pad )
+            if ( event.pad_index() == (int)pad )
             {
                 break;
             }
@@ -165,10 +166,13 @@ void MainWindow::on_update_song()
 
     update_pattern_names();
 
-    QString songDesc = QString((char*)song_->base_folder().c_str())
-            + QString(" (")
+    QString songDesc( song_->base_folder().string().c_str() );
+    songDesc += QString(" (")
             + QString::number(song_->patterns().size())
             + " patterns @ " + QString::number(song_->bpm() )+ " bpm)";
+
+    songDesc.replace('\\', '/');
+
     ui->songInfoLabel->setText(songDesc);
 }
 
@@ -255,12 +259,18 @@ void MainWindow::on_exportButton_clicked()
     export_options.keep_tails_ = ui->exportTailsCheckbox->isChecked();
     export_options.loop_count_ = ui->loopCountSpinBox->value();
 
-    QProgressDialog progress("Exporting", "Cancel", 0, active_pattern_->pads_playing().size(), this);
+    unsigned tracks = active_pattern_->pads_playing().size();
+
+    QProgressDialog progress("Exporting", "Cancel", 0, tracks, this);
     progress.setWindowModality(Qt::WindowModal);
     boost::signals2::connection connection = song_->sig_track_exported_.connect(
                 [&](unsigned val) { progress.setValue(val); QApplication::processEvents(); } );
     progress.show();
 
+    ui->statusBar->showMessage( "Exporting..." );
+
     song_->export_pattern(*active_pattern_, export_options);
     connection.disconnect();
+
+    ui->statusBar->showMessage( "Exported " + QString::number(tracks) + " tracks." );
 }

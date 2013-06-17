@@ -8,6 +8,8 @@ public:
     unsigned char offset_to_next() const;
     float quarters_offset_to_next() const;
     unsigned char note_number() const;
+    int pad_index() const; // includes bank switch. -1 for non-pads
+    bool bank_switch() const;
     unsigned char velocity() const;
     float quarters_held() const;
     float quarters_absolute_position() const;

@@ -1,26 +1,37 @@
 BouncinSP
 =========
 
-Tool for automatic tracking/exporting of patterns made on Roland SP samplers.
+Tool for automatic tracking/exporting of patterns made on Roland SP samplers (SP-404SX only for now).
 
 By jarills, 2013.
 
 ----------------
-Todos and missing features for version 0.2:
 
-Rendering:
+Beta version (0.2).
 
-- export with tails (instead of cutting off)
+Features:
+
+- Supports SP-404SX patterns, samples and song information
+- Single pattern export into individual tracks
+- Setting a repeat (loop) count
+- Keeping tails of samples after loop end
+- Option to normalize each track
+- Renaming patterns and using those names as a naming scheme for files
+- Naming scheme: track_PATTERN_PAD_BARCOUNT.wav
+- Graphical view of the pattern
+- Gate, Loop, Reverse playback modes (no Lofi)
 
 ----------------
-For future versions:
+
+TODO and possible features in future versions:
 
 Rendering:
 
-- Lofi support
 - stereo export option (mixdown)
-- adjustable loop count
+- Lofi fake, but better to do in the DAW
+- support for changing the BPM (is that useful?)
 
 Audio:
 
 - preview pattern through audio interface
+

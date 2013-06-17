@@ -26,7 +26,19 @@ float PatternEvent::quarters_offset_to_next() const
 
 unsigned char PatternEvent::note_number() const
 {
-    return (unsigned char)data_[1];
+    return (unsigned char) data_[1];
+}
+
+int PatternEvent::pad_index() const
+{
+    if ( !is_sample() ) return -1;
+
+    return (note_number() - BouncinSP::SP404SX::PadA1MidiOffset) + (bank_switch() ? 60 : 0);
+}
+
+bool PatternEvent::bank_switch() const
+{
+    return data_[2] == 1;
 }
 
 unsigned char PatternEvent::velocity() const
@@ -59,7 +71,7 @@ void PatternEvent::print() const
     using namespace std;
     cout << "pattern event:" << "\t";
     cout << "position: " << quarters_absolute_position() << "\t";
-    cout << "note number: " << (int)note_number() << "\t";
+    cout << "pad index: " << (int)pad_index() << "\t";
     cout << "velocity: " << (int)velocity() << "\t";
     cout << "held for: " << quarters_held() << endl;
 }

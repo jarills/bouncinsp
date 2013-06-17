@@ -148,7 +148,7 @@ bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx, const Ex
 
     for ( const auto & e : evts )
     {
-        if ( pad_idx + BouncinSP::SP404SX::PadA1MidiOffset != e.note_number() )
+        if ( (int)pad_idx != e.pad_index() )
         {
             continue;
         }
