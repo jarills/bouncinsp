@@ -25,6 +25,10 @@ Features:
 
 TODO and possible features in future versions:
 
+General:
+
+- icon
+
 Rendering:
 
 - stereo export option (mixdown)

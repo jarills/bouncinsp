@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Bouncin' SP v0.1 by jarills' dusty labs</string>
+   <string>Bouncin' SP v0.2 by jarills' dusty labs</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QListView" name="patternTable">
@@ -337,14 +337,7 @@
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>?</string>
-    </property>
-    <addaction name="actionAbout"/>
-   </widget>
    <addaction name="menuFile"/>
-   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionOpen">
