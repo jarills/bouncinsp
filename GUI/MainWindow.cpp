@@ -7,6 +7,7 @@
 
 #include "Song.h"
 #include "Pattern.h"
+#include "BouncinSP.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -109,6 +110,43 @@ void MainWindow::update_pattern_names()
     }
 }
 
+void MainWindow::buildPatternView()
+{
+    QGraphicsScene *old = ui->patternView->scene();
+    ui->patternView->setScene(NULL);
+    delete old;
+
+    if ( !active_pattern_ )
+    {
+        return;
+    }
+
+    QGraphicsScene *scene = new QGraphicsScene();
+    auto pads_playing = active_pattern_->pads_playing();
+    scene->setSceneRect(0.0, 0.0, (active_pattern_->pattern_length()*4.0)*100, (pads_playing.size()+1)*100);
+
+
+    for ( auto event : active_pattern_->events() )
+    {
+        int idx = 0;
+        for ( auto pad : pads_playing )
+        {
+            if ( (event.note_number() - BouncinSP::SP404SX::PadA1MidiOffset) == pad )
+            {
+                break;
+            }
+            idx++;
+        }
+
+        QBrush brush(QColor::fromHsl(240*((float)idx/(float)pads_playing.size()), 120, 120));
+        scene->addRect( event.quarters_absolute_position()*100, idx*100, event.quarters_held()*100, 1.0*100, QPen(), brush );
+    }
+
+    ui->patternView->setScene(scene);
+    ui->patternView->fitInView(scene->sceneRect(), Qt::KeepAspectRatio);
+    ui->patternView->scale(0.9,0.9);
+}
+
 void MainWindow::on_update_song()
 {
     QStandardItemModel *model = (QStandardItemModel*)ui->patternTable->model();
@@ -154,11 +192,13 @@ void MainWindow::on_pattern_select(const QItemSelection &selection)
 
     QString pattern_name;
     int tracks = 0;
+    int length = 0;
 
     if ( ptn )
     {
         pattern_name = ptn->pattern_name().c_str();
         tracks = ptn->pads_playing().size();
+        length = ptn->pattern_length();
     }
 
     ui->patternFrame->setEnabled(!!ptn);
@@ -167,10 +207,13 @@ void MainWindow::on_pattern_select(const QItemSelection &selection)
     ui->patternNameEdit->setEnabled(!!ptn);
 
     ui->labelNumTracks->setText(QString::number(tracks));
+    ui->lengthLabel->setText(QString::number(length));
 
     ui->bpmBox->setValue(song_->bpm());
 
     active_pattern_ = ptn;
+
+    buildPatternView();
 }
 
 void MainWindow::on_browseFolderButton_clicked()

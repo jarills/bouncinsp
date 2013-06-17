@@ -16,8 +16,6 @@ Rendering:
 
 UI:
 
-- show pattern length
-
 ----------------
 For future versions:
 
@@ -26,10 +24,6 @@ Rendering:
 - Lofi support
 - stereo export option (mixdown)
 - adjustable loop count
-
-UI:
-
-- show a graphical view of the pattern
 
 Audio:
 

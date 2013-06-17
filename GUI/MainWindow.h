@@ -45,6 +45,7 @@ private:
 
     void on_update_song();
     void update_pattern_names();
+    void buildPatternView();
 
 private:
     Ui::MainWindow *ui;
