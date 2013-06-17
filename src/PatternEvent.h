@@ -12,6 +12,8 @@ public:
     float quarters_held() const;
     float quarters_absolute_position() const;
 
+    bool is_sample() const; // true if midi number is one of the 120 pads
+
     const char *data() const;
 
     void print() const;

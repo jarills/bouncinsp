@@ -162,8 +162,11 @@ bool Song::export_pad_in_pattern(const Pattern & ptn, unsigned pad_idx, const Ex
         }
     }
 
-    while ( samples_to_export-- )
+    while ( samples_to_export ||
+            (export_options.keep_tails_ && pad.playing() && (!pad.pad_info().is_loop()||pad.pad_info().is_gate())))
     {
+        if ( samples_to_export > 0 ) samples_to_export--;
+
         std::vector< float > out = pad.render_sample();
 
         if ( out.empty() )

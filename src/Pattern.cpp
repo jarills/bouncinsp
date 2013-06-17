@@ -74,10 +74,9 @@ std::set< unsigned > Pattern::pads_playing() const
 
     for ( const auto & e : events_ )
     {
-        unsigned pad = e.note_number();
-        if ( pad != 0x80 && pad >= BouncinSP::SP404SX::PadA1MidiOffset )
+        if ( e.is_sample() )
         {
-            out.insert(pad - BouncinSP::SP404SX::PadA1MidiOffset);
+            out.insert(e.note_number() - BouncinSP::SP404SX::PadA1MidiOffset);
         }
     }
 

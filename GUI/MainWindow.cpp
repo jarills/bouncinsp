@@ -128,6 +128,8 @@ void MainWindow::buildPatternView()
 
     for ( auto event : active_pattern_->events() )
     {
+        if ( !event.is_sample() ) continue;
+
         int idx = 0;
         for ( auto pad : pads_playing )
         {
@@ -250,7 +252,7 @@ void MainWindow::on_exportButton_clicked()
     Song::ExportOptions export_options;
     export_options.normalize_ = ui->normalizeCheckbox->isChecked();
     export_options.path_ = ui->destinationEdit->text().toStdString();
-    export_options.export_tails_ = ui->exportTailsCheckbox->isChecked();
+    export_options.keep_tails_ = ui->exportTailsCheckbox->isChecked();
     export_options.loop_count_ = ui->loopCountSpinBox->value();
 
     QProgressDialog progress("Exporting", "Cancel", 0, active_pattern_->pads_playing().size(), this);

@@ -39,6 +39,11 @@ float PatternEvent::quarters_absolute_position() const
     return quarters_absolute_position_;
 }
 
+bool PatternEvent::is_sample() const
+{
+    return note_number() >= BouncinSP::SP404SX::PadA1MidiOffset && note_number() < 0x80;
+}
+
 const char *PatternEvent::data() const
 {
     return data_;

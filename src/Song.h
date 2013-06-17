@@ -15,11 +15,11 @@ public:
 
     struct ExportOptions
     {
-        ExportOptions() : normalize_(true), loop_count_(1), export_tails_(true) {}
+        ExportOptions() : normalize_(true), loop_count_(1), keep_tails_(true) {}
         bool normalize_;
         boost::filesystem::path path_;
         unsigned loop_count_;
-        bool export_tails_;
+        bool keep_tails_;
     };
 
 public:
