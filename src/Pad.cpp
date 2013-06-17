@@ -15,7 +15,8 @@ Pad::Pad( const PadInfo & pad_info )
       song_bpm_(0.0f),
       playing_(false),
       samples_remaining_(0),
-      play_pos_(0)
+      play_pos_(0),
+      event_velocity_(0)
 {
 }
 
@@ -44,8 +45,9 @@ std::string Pad::sample_name() const
 
     char bank = 'A' + (pad_info_.idx()) / 12;
     unsigned relative_pad_idx = ((pad_info_.idx()) % 12)+1;
+    std::string extension = pad_info_.is_wav() ? ".WAV" : ".AIF";
 
-    return (boost::format("%1%%2%.WAV") % bank % group(setfill('0'), setw(7), relative_pad_idx)).str();
+    return (boost::format("%1%%2%%3%") % bank % group(setfill('0'), setw(7), relative_pad_idx) % extension).str();
 }
 
 std::vector< float > Pad::render_sample()
@@ -88,9 +90,11 @@ std::vector< float > Pad::render_sample()
         return temp;
     }
 
+    float gain = ((float)pad_info_.volume()/127.0f) *((float)event_velocity_/127.0f);
+
     for ( unsigned int c = 0; c < pad_info_.num_channels(); ++c )
     {
-        temp.push_back(sample_->get_samples(c)[play_pos_]);
+        temp.push_back(sample_->get_samples(c)[play_pos_]*gain);
     }
 
     play_pos_ += pad_info_.is_reverse() ? -1 : 1;
@@ -140,14 +144,19 @@ void Pad::process_queue()
         {
             const PatternEvent & evt = i.second;
 
-            if ( !pad_info_.is_loop() || !playing_ )
-            {
-                // reset play cursor
-                play_pos_ = pad_info_.is_reverse() ? (pad_info_.user_sample_end()-1) : pad_info_.user_sample_start();
-            }
-
+            // reset play cursor
+            play_pos_ = pad_info_.is_reverse() ? (pad_info_.user_sample_end()-1) : pad_info_.user_sample_start();
             samples_remaining_ = unsigned((float)evt.quarters_held() * seconds_per_quarter * (float)sample_->sample_rate());
-            playing_ = true;
+            event_velocity_ = evt.velocity();
+
+            if ( pad_info_.is_loop() && playing_ ) // loops stop playing when pressed a second time
+            {
+                playing_ = false;
+            }
+            else // all other start/retrigger
+            {
+                playing_ = true;
+            }
         }
 
         i.first--;

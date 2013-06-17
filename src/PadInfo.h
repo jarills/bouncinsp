@@ -19,6 +19,8 @@ public:
     bool is_loop() const;
     bool is_gate() const;
     bool is_reverse() const;
+    unsigned char is_wav() const;
+    unsigned char is_aiff() const;
     unsigned char num_channels() const;
     unsigned char tempo_mode() const; // 0 = off, 1 = pattern, 2 = user
 

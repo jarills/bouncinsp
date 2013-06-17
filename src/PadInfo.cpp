@@ -17,7 +17,7 @@ namespace PadDataOffsets
     static const unsigned gate = 19;
     static const unsigned reverse = 20;
 
-    static const unsigned unknown = 21;
+    static const unsigned sample_format = 21; // 1 = wav, 0 = aiff
     static const unsigned channels = 22;
     static const unsigned tempo_mode = 23;
 
@@ -75,6 +75,16 @@ bool PadInfo::is_gate() const
 bool PadInfo::is_reverse() const
 {
     return data_[PadDataOffsets::reverse] == 1;
+}
+
+unsigned char PadInfo::is_wav() const
+{
+    return data_[PadDataOffsets::sample_format] == 1;
+}
+
+unsigned char PadInfo::is_aiff() const
+{
+    return data_[PadDataOffsets::sample_format] == 0;
 }
 
 unsigned char PadInfo::num_channels() const

@@ -43,6 +43,7 @@ private:
     bool playing_;
     PadInfo pad_info_;
     float song_bpm_;
+    char event_velocity_;
 
     std::vector< std::pair< int, PatternEvent > > queue_;
 };

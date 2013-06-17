@@ -10,11 +10,7 @@ Todos and missing features for version 0.2:
 
 Rendering:
 
-- AIFF support (detection)
-- volume/velocity support
 - export with tails (instead of cutting off)
-
-UI:
 
 ----------------
 For future versions:
