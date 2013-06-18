@@ -49,10 +49,15 @@ win32: LIBS += -L"C:/Users/jarek/Coding/boost_1_53_0/stage/lib/" libboost_system
 win32: LIBS += -L"C:/Program Files (x86)/Mega-Nerd/libsndfile/lib/" -llibsndfile-1
 
 win32: LIBS += -lole32 -luser32
+CONFIG+=c++11
+
+macx: LIBPATH += ../../libsndfile-1.0.24/src ../../boost_1_53_0/stage/lib
 
 unix: LIBS += -lsndfile -lboost_system -lboost_filesystem
-unix:!macx: QMAKE_CXXFLAGS += -std=c++11
+unix: QMAKE_CXXFLAGS += -std=c++11
 win32:      QMAKE_CXXFLAGS += -std=c++11
+
+macx: INCLUDEPATH += ../../libsndfile-1.0.24/src
 
 win32: INCLUDEPATH += "C:/Program Files (x86)/Mega-Nerd/libsndfile/include"
 win32: DEPENDPATH += "C:/Program Files (x86)/Mega-Nerd/libsndfile/include"

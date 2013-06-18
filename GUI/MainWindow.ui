@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>685</width>
-    <height>383</height>
+    <height>395</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,7 +24,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>20</y>
+      <y>30</y>
       <width>251</width>
       <height>311</height>
      </rect>
@@ -46,7 +46,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>20</y>
+      <y>30</y>
       <width>401</width>
       <height>311</height>
      </rect>
@@ -72,6 +72,11 @@
        <height>27</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
      <property name="text">
       <string>Export</string>
      </property>
@@ -84,6 +89,11 @@
        <width>291</width>
        <height>27</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
      </property>
      <property name="styleSheet">
       <string notr="true">color: rgb(0, 0, 0);</string>
@@ -110,9 +120,14 @@
       <rect>
        <x>10</x>
        <y>240</y>
-       <width>71</width>
+       <width>81</width>
        <height>22</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Normalize</string>
@@ -145,6 +160,11 @@
         <height>21</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>BPM:</string>
       </property>
@@ -171,6 +191,11 @@
         <height>17</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Tracks:</string>
       </property>
@@ -184,6 +209,11 @@
         <height>17</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>0</string>
       </property>
@@ -196,6 +226,11 @@
         <width>58</width>
         <height>31</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>Name:</string>
@@ -220,6 +255,11 @@
         <height>16</height>
        </rect>
       </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
       <property name="text">
        <string>Length:</string>
       </property>
@@ -232,6 +272,11 @@
         <width>31</width>
         <height>16</height>
        </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
       </property>
       <property name="text">
        <string>0</string>
@@ -264,11 +309,16 @@
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
-       <x>285</x>
+       <x>270</x>
        <y>240</y>
-       <width>61</width>
+       <width>71</width>
        <height>21</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Loop Count:</string>
@@ -277,11 +327,16 @@
     <widget class="QCheckBox" name="exportTailsCheckbox">
      <property name="geometry">
       <rect>
-       <x>90</x>
+       <x>100</x>
        <y>240</y>
        <width>81</width>
        <height>21</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
      </property>
      <property name="toolTip">
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If this option is checked, the exported files will not be cut at the loop end point, leaving any trailing samples to be played until the end.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -294,11 +349,16 @@
    <widget class="QLabel" name="songInfoLabel">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>0</y>
-      <width>581</width>
+      <x>100</x>
+      <y>10</y>
+      <width>561</width>
       <height>16</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Empty.</string>
@@ -307,14 +367,32 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>0</y>
+      <x>50</x>
+      <y>10</y>
       <width>51</width>
       <height>16</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <pointsize>11</pointsize>
+     </font>
+    </property>
     <property name="text">
      <string>Project:</string>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="loadToolButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>31</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Load</string>
     </property>
    </widget>
   </widget>
@@ -324,7 +402,7 @@
      <x>0</x>
      <y>0</y>
      <width>685</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

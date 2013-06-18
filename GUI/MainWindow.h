@@ -61,6 +61,8 @@ private slots:
 
     void on_exportButton_clicked();
 
+    void on_loadToolButton_clicked();
+
 private:
 
     void on_update_song();

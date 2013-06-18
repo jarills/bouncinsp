@@ -36,15 +36,48 @@
 
 using namespace std;
 
+namespace
+{
+    boost::filesystem::path resolve_song_folder(const boost::filesystem::path & base, const std::string & sp_folder)
+    {
+        using namespace boost::filesystem;
+
+        if ( base.stem() == sp_folder )
+        {
+            return base;
+        }
+
+        path one_down = base / sp_folder;
+
+        if ( is_directory( one_down ) )
+        {
+            return one_down;
+        }
+
+        path two_down = base / "ROLAND" / sp_folder;
+        if ( is_directory( two_down ) )
+        {
+            return two_down;
+        }
+
+        return base;
+    }
+}
+
 Song::Song( const boost::filesystem::path & base_folder )
     :
-      base_folder_(base_folder),
       bpm_(0.0f)
 {
     using namespace boost::filesystem;
 
-    if ( !exists(base_folder_) || !is_directory(base_folder_))
+    boost::system::error_code ec;
+
+    base_folder_ = resolve_song_folder(base_folder, "SP-404SX");
+    cout << "resolved folder: " << base_folder_ << endl;
+
+    if ( !is_directory(base_folder_, ec))
     {
+        cout << "Couldn't find song folder " << ec.value() << ec.message() << endl;
         return;
     }
 

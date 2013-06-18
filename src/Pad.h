@@ -27,9 +27,9 @@
 #include <vector>
 #include <queue>
 #include <utility>
+#include "PatternEvent.h"
 
 class SimpleAudioWave;
-class PatternEvent;
 
 class Pad
 {

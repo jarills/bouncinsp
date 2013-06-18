@@ -89,7 +89,9 @@ void MainWindow::on_actionOpen_triggered()
         return;
     }
 
-    song_ = std::make_shared< Song >( dir.toStdString() );
+    std::string path = dir.toStdString();
+
+    song_ = std::make_shared< Song >( path );
     song_->load_patterns();
 
     if ( song_ )
@@ -294,4 +296,10 @@ void MainWindow::on_exportButton_clicked()
     connection.disconnect();
 
     ui->statusBar->showMessage( "Exported " + QString::number(tracks) + " tracks." );
+}
+
+
+void MainWindow::on_loadToolButton_clicked()
+{
+    on_actionOpen_triggered();
 }
