@@ -3,7 +3,8 @@ BouncinSP
 
 Tool for automatic tracking/exporting of patterns made on Roland SP samplers (SP-404SX only for now).
 
-By jarills, 2013.
+copyright jarills, 2013.
+License: GPL Version 3
 
 ----------------
 
@@ -23,16 +24,19 @@ Features:
 
 ----------------
 
-TODO and possible features in future versions:
+TODO for 1.0 release (long-term milestone):
 
-General:
-
+- full 404sx and 404 original support
+- Mac, Linux, Windows builds
+- stable, bug-free, working version
 - icon
+- Lofi fake, but better to do in the DAW
+
+TODO and possible features in future versions:
 
 Rendering:
 
 - stereo export option (mixdown)
-- Lofi fake, but better to do in the DAW
 - support for changing the BPM (is that useful?)
 
 Audio:
